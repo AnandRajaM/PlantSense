@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PlantSense Chat</title>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Background */
+    section {
+      background: radial-gradient(#f3fefa, white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Navbar Styling */
+    header {
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #000;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #064755;
+    }
+
+    /* Chat Box Container */
+    .card-container {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      width: 500px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+      top: 80px; /* Adjust for fixed navbar */
+    }
+
+    /* Chat Header */
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .card-header .img-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 20px;
+      background-color: #4CAF50;
+    }
+
+    .card-header .text-chat {
+      color: #4CAF50;
+      margin: 0;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    /* Chat Messages Body */
+    .card-body {
+      flex: 1;
+      overflow-y: auto; /* Enable scrolling */
+      max-height: 400px; /* Set a maximum height for the chat area */
+      padding-bottom: 10px;
+    }
+
+    .messages-container {
+      padding: 15px;
+      display: flex;
+      flex-direction: column; /* Arrange messages in a column */
+    }
+
+    /* Message Box Styles */
+    .message-box {
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 10px;
+      max-width: 70%; /* Limit width to prevent overflow */
+      display: inline-block; /* Allows for margin adjustments */
+    }
+
+    .message-box.left {
+      background-color: #4CAF50; /* Green for AI responses */
+      color: #fff;
+      text-align: left;
+    }
+
+    .message-box.right {
+      background-color: #f1f1f1; /* Gray for user messages */
+      color: black;
+      text-align: right;
+      margin-left: auto; /* Push to the right side */
+    }
+
+    /* Message Input Area */
+    .message-input {
+      padding: 5px;
+      border-top: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+    }
+
+    .message-input .message-send {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      resize: none;
+      outline: none;
+      font-size: 14px;
+      background-color: #f3fefa;
+    }
+
+    .message-input .button-send {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      margin-left: 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      transition: background-color 0.3s ease;
+    }
+
+    .message-input .button-send:hover {
+      background-color: #3e8e41;
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "@google/generative-ai": "https://esm.run/@google/generative-ai"
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <div class="container">
+      <a href="#" class="logo">
+        <img src="./../static/favicons/plant.png" alt="PlantSense Logo">
+        <span>PlantSense</span>
+      </a>
+      <nav>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Chat Section -->
+  <section>
+    <div class="card-container">
+      <div class="card-header">
+        <div class="img-avatar"></div>
+        <div class="text-chat">Plantify</div>
+      </div>
+      <div class="card-body">
+        <div class="messages-container" id="messages-container">
+          <!-- Initial message will be added here -->
+        </div>
+        <div class="message-input">
+          <form id="chat-form">
+            <textarea id="message-input" placeholder="Type your message here" class="message-send"></textarea>
+            <button type="submit" class="button-send">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script type="module">
+    import { GoogleGenerativeAI } from "@google/generative-ai";
+  
+    // Fetch your API_KEY
+    const API_KEY = "AIzaSyB_jdeyDDAG9Orotyzr9Pyy9bpJFI6Wc8k"; // Replace with your actual API key
+    const genAI = new GoogleGenerativeAI(API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  
+    // Get the prediction from the URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const prediction = urlParams.get('pred') || "unknown"; // Default to "unknown" if not provided
+  
+    // Initialize chat history array
+    let chatHistory = [];
+  
+    // Function to display messages in the chat
+    function displayMessage(message, side) {
+      const messageBox = document.createElement('div');
+      messageBox.classList.add('message-box', side);
+      messageBox.textContent = message;
+      document.getElementById('messages-container').appendChild(messageBox);
+    }
+  
+    // Display the initial message about the prediction
+    displayMessage(`Hey, our model has detected ${prediction} in the plant. Do you have any questions?`, 'left');
+  
+    document.getElementById('chat-form').addEventListener('submit', async function (event) {
+      event.preventDefault(); // Prevent form submission
+  
+      const messageInput = document.getElementById('message-input');
+      const userMessage = messageInput.value;
+  
+      // Display user's message
+      displayMessage(userMessage, 'right');
+      
+      // Add user's message to chat history
+      chatHistory.push({ role: 'user', content: userMessage });
+  
+      // Clear the input field
+      messageInput.value = '';
+  
+      // Call the AI API and get the response
+      const aiResponse = await getAIResponse();
+  
+      // Display AI's message
+      displayMessage(aiResponse, 'left');
+  
+      // Add AI's response to chat history
+      chatHistory.push({ role: 'ai', content: aiResponse });
+    });
+  
+    async function getAIResponse() {
+      // Build the prompt with chat history
+      let conversationContext = chatHistory.map(entry => 
+        `${entry.role === 'user' ? 'User' : 'AI'}: ${entry.content}`
+      ).join('\n');
+  
+      // Main prompt with history and detected disease
+      const prompt = `You are a chatbot that provides concise advice on plant diseases and related agricultural information.Do Not use special characters. Reply in simple and concise manner. Our model has detected "${prediction}" in the plant. Provide accurate responses based on this context.\n${conversationContext}\nAI: `;
+  
+      try {
+        const result = await model.generateContent(prompt);
+        return result.response.text(); // Assuming the response is in this format
+      } catch (error) {
+        console.error('Error fetching AI response:', error);
+        return 'Sorry, there was an error getting the response.';
+      }
+    }
+  </script>
+</body>
+</html>

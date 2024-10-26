@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', filename='css/output.css') }}" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicons/plant.png') }}" type="image/x-icon">
+    <link href="{{ url_for('static', filename='css/own.css') }}" rel="stylesheet">
+    <title>PlantSense</title>
+</head>
+<body>
+    <section style="background: radial-gradient(#f3fefa, white);">   
+        <header class="text-gray-600 body-font">
+            <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+              <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+                <img src="./../static/favicons/plant.png" class="w-10 h-10" alt="PlantSense Logo">
+                <span class="ml-3 text-xl">PlantSense</span>
+              </a>
+              <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
+                <a class="mr-5 hover:text-gray-900">Home</a>
+                <a class="mr-5 hover:text-gray-900">About</a>
+                <a class="mr-5 hover:text-gray-900">Contact</a>
+              </nav>
+              <button onclick="window.open('{{ url_for('upload_page') }}', '_blank')" class="inline-flex items-center bg-[#064755] text-[#40ee97] border-0 focus:outline-none px-7 py-3 rounded-2xl text-base mt-4 md:mt-0">
+                Start Diagnosing
+                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                </svg>
+            </button>
+            
+            </div>
+          </header>
+
+          <section class="text-green-900 body-font w-dvw">
+            <div class="container mx-auto flex px-6 py-24 md:flex-row flex-col items-center">
+              <div class="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center pl-10">
+                <h1 style="font-family: 'carmen';" class="title-font sm:text-[40px] text-[30px] font-medium text-gray-900">PlantSense: Easy access to
+
+                  <span><br class="hidden lg:inline-block">AI-Powered <span class="text-[#00cc6a]">Plant Disease Diagnosis</span></span>
+                  <br class="hidden lg:inline-block">Made Affordable
+                </h1>
+                <p class="mb-8 mt-4 text-lg leading-relaxed" style="font-family: 'varela round';">Our cloud-hosted application provides real-time disease predictions and personalized treatment advice. </p>
+
+                <div class="px-6 py-[14.5px] rounded-xl shadow-xl" style="box-shadow: #d8ffec 0px 7px 29px 0px; font-family: 'varela round';">
+                  <p>Get curated plant diagnosis <button onclick="window.open('{{ url_for('upload_page') }}', '_blank')" class="ml-3 px-5 py-2 rounded-xl bg-[#03FFC2]">Lets's Go!</button></p>
+                </div>
+              </div>
+              <div class="lg:max-w-[630px] lg:w-full md:w-1/2 w-5/6">
+                <img class="object-cover object-center rounded" alt="hero" src="./../static/images/Ecology.png">
+              </div>
+            </div>
+          </section>
+    </section>
+
+    <section class="trust_customers mt-20">
+      <section class="text-gray-600 body-font">
+        <div class="container px-5 py-24 mx-auto">
+          <div class="flex flex-col text-center w-full mb-20">
+            <h1 class="text-3xl md:text-4xl font-medium title-font mb-4 text-gray-900" style="font-family: 'carmen';">Trusted by Farmers</h1>
+          </div>
+          <center>
+            <div class="flex flex-wrap -m-4 text-center rounded-xl lg:max-w-[75rem]" style="box-shadow: #d8ffec 0px 7px 29px 0px">
+              <div class="p-4 md:w-1/4 sm:w-1/2">
+                <div class="px-4 py-6 rounded-lg">
+                  <ion-icon style="color: #5dedae; font-size:48px !important;" name="people-outline"></ion-icon>
+                  <h2 class="title-font font-medium text-3xl text-gray-900">10k</h2>
+                  <p class="leading-relaxed">Users</p>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                <div class="px-4 py-6 rounded-lg">
+                  <ion-icon style="color: #5dedae; font-size:48px !important;" name="cloud-download-outline"></ion-icon>
+                  <h2 class="title-font font-medium text-3xl text-gray-900">15K</h2>
+                  <p class="leading-relaxed">Uploads</p>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                <div class="px-4 py-6 rounded-lg">
+                  <ion-icon name="analytics-outline" style="color: #5dedae; font-size:48px !important;"></ion-icon>
+                  <h2 class="title-font font-medium text-3xl text-gray-900">98%</h2>
+                  <p class="leading-relaxed">Accuracy</p>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                <div class="px-4 py-6 rounded-lg">
+                  <ion-icon name="shield-checkmark-outline" style="color: #5dedae; font-size:48px !important;"></ion-icon>
+                  <h2 class="title-font font-medium text-3xl text-gray-900">5s</h2>
+                  <p class="leading-relaxed">Quick Response</p>
+                </div>
+              </div>
+            </div>
+          </center>
+        </div>
+      </section>
+    </section>
+</body>
+</html>

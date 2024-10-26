@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./../static/favicons/plant.png" type="image/x-icon">
+    <title>PlantSense</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        section {
+            background: radial-gradient(#f3fefa, white);
+        }
+
+        header {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #000;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #064755;
+        }
+
+        .btn-start {
+            background-color: #064755;
+            color: #40ee97;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-start svg {
+            margin-left: 5px;
+        }
+
+        .upload-container {
+            width: 300px;
+            height: 300px;
+            border-radius: 10px;
+            box-shadow: 4px 4px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: rgba(0, 110, 255, 0.041);
+            margin: 20px auto;
+        }
+
+        .header {
+            flex: 1;
+            width: 100%;
+            border: 2px dashed royalblue;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .header svg {
+            height: 100px;
+        }
+
+        .header p {
+            text-align: center;
+            color: black;
+        }
+
+        .footer {
+            background-color: rgba(0, 110, 255, 0.075);
+            width: 100%;
+            height: 40px;
+            padding: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            color: black;
+            border: none;
+        }
+
+        .footer svg {
+            height: 130%;
+            fill: royalblue;
+            background-color: rgba(70, 66, 66, 0.103);
+            border-radius: 50%;
+            padding: 2px;
+            cursor: pointer;
+            box-shadow: 0 2px 30px rgba(0, 0, 0, 0.205);
+        }
+
+        .footer p {
+            flex: 1;
+            text-align: center;
+        }
+
+        #file {
+            display: none; /* Hide file input */
+        }
+
+        .loader {
+            width: 64px;
+            height: 64px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #FFF;
+            border-radius: 4px;
+            overflow: hidden;
+            display: none; /* Hide by default */
+            z-index: 1001; /* Ensure it's above the overlay */
+        }
+
+        .loader:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 40px;
+            transform: rotate(45deg) translate(30%, 40%);
+            background: #ff9371;
+            box-shadow: 32px -34px 0 5px #ff3d00;
+            animation: slide 2s infinite ease-in-out alternate;
+        }
+
+        .loader:after {
+            content: "";
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ff3d00;
+            transform: rotate(0deg);
+            transform-origin: 35px 145px;
+            animation: rotate 2s infinite ease-in-out;
+        }
+
+        @keyframes slide {
+            0%, 100% {
+                bottom: -35px;
+            }
+            25%, 75% {
+                bottom: -2px;
+            }
+            20%, 80% {
+                bottom: 2px;
+            }
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(-15deg);
+            }
+            25%, 75% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(25deg);
+            }
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.5); /* Semi-transparent background */
+            backdrop-filter: blur(5px); /* Apply blur effect */
+            display: none; /* Hide by default */
+            z-index: 1000; /* Below the loader but above the content */
+        }
+
+        .processing-text {
+            position: fixed;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5em;
+            color: black;
+            display: none; /* Hide by default */
+            z-index: 1002; /* Ensure it's above the overlay */
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <header>
+            <div class="container">
+                <a href="#" class="logo">
+                    <img src="./../static/favicons/plant.png" alt="PlantSense Logo">
+                    <span>PlantSense</span>
+                </a>
+                <nav>
+                    <a href="#">Home</a>
+                    <a href="#">About</a>
+                    <a href="#">Contact</a>
+                </nav>
+            </div>
+        </header>
+
+        <div style="height:150px;"></div>
+        <form action="/upload" method="post" enctype="multipart/form-data" class="upload-container">
+            <div class="header">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g>
+                        <path d="M7 10V9C7 6.23858 9.23858 4 12 4C14.7614 4 17 6.23858 17 9V10C19.2091 10 21 11.7909 21 14C21 15.4806 20.1956 16.8084 19 17.5M7 10C4.79086 10 3 11.7909 3 14C3 15.4806 3.8044 16.8084 5 17.5M7 10C7.43285 10 7.84965 10.0688 8.24006 10.1959M12 12V21M12 12L15 15M12 12L9 15" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </g>
+                </svg>
+                <p id="upload-text">Browse File to upload!</p>
+            </div>
+            <label for="file" class="footer" id="upload-label" style="cursor: pointer;">
+                <svg fill="#000" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                    <g>
+                        <path d="M15.331 6H8.5v20h15V14.154h-8.169z"></path>
+                        <path d="M18.153 6h-.009v5.342H23.5v-.002z"></path>
+                    </g>
+                </svg>
+                <p id="file-name">Not selected file</p>
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g>
+                        <path d="M5.16565 10.1534C5.07629 8.99181 5.99473 8 7.15975 8H16.8402C18.0053 8 18.9237 8.99181 18.8343 10.1534L17.8343 17.1534C17.5975 19.5974 15.7101 21 13.1856 21H10.8144C8.28986 21 6.4025 19.5974 6.16568 17.1534L5.16565 10.1534Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </g>
+                </svg>
+            </label>
+            <input type="file" name="file" id="file" accept=".jpg, .jpeg, .png, .pdf" required>
+            <div style="height:10px;"></div>
+            <button class="btn-start" type="submit" id="upload-button">Plantify</button>
+        </form>
+    </section>
+
+    <div class="loader" id="loader"></div>
+    <div class="overlay" id="overlay"></div>
+    <div class="processing-text" id="processing-text">Processing your data...</div>
+
+    <script>
+        const fileInput = document.getElementById('file');
+const fileNameLabel = document.getElementById('file-name');
+const uploadButton = document.getElementById('upload-button');
+const loader = document.getElementById('loader');
+const overlay = document.getElementById('overlay');
+const processingText = document.getElementById('processing-text');
+
+const processingPhrases = [
+    "Did you know? Some plants can purify the air!",
+    "Fun Fact: The tallest tree in the world is a coast redwood!",
+    "Interesting: Bamboo can grow up to 3 feet in a single day!",
+    "Plant Fact: Aloe Vera has healing properties and is often used in skincare.",
+    "Did you know? The world's oldest living tree is over 4,800 years old!",
+    "Fun Fact: Sunflowers can grow as tall as 12 feet!",
+    "Interesting: Some plants can live for thousands of years!",
+    "Plant Fact: There are over 390,000 plant species worldwide!"
+];
+
+let currentPhraseIndex = 0;
+
+fileInput.addEventListener('change', function() {
+    const fileName = fileInput.files[0]?.name || 'Not selected file';
+    fileNameLabel.textContent = fileName;
+});
+
+uploadButton.addEventListener('click', function() {
+    loader.style.display = 'block';
+    overlay.style.display = 'block';
+    processingText.style.display = 'block';
+
+    // Cycle through phrases
+    const interval = setInterval(() => {
+        if (currentPhraseIndex < processingPhrases.length) {
+            processingText.textContent = processingPhrases[currentPhraseIndex];
+            currentPhraseIndex++;
+        } else {
+            clearInterval(interval);
+        }
+    }, 2000); // Change phrase every second
+});
+    </script>
+</body>
+</html>
